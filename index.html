@@ -163,7 +163,8 @@
           const backButton = document.createElement("button");
           backButton.innerText = "戻す";
           backButton.addEventListener("click", () => {
-            const todoText = backButton.parentElement.previousElementSibling.innerText;
+            const todoText =
+              backButton.parentElement.previousElementSibling.innerText;
             createTodo(todoText);
             li.remove();
           });
@@ -188,7 +189,9 @@
         document.getElementById("incomplete-todos").appendChild(li);
       };
 
-      document.getElementById("add-button").addEventListener("click", onClickAdd);
+      document
+        .getElementById("add-button")
+        .addEventListener("click", onClickAdd);
     </script>
   </body>
 </html>
