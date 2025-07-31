@@ -3,7 +3,97 @@
   <head>
     <title>TODO</title>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./styles.css" />
+    <style>
+      body {
+        color: #222;
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #fdfdfd;
+      }
+
+      .input-area,
+      .incomplete-area,
+      .completed-area {
+        background: #fff;
+        border-radius: 10px;
+        padding: 16px;
+        margin: 12px;
+        width: 95%;
+        max-width: 600px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        margin-bottom: 8px;
+        font-size: 16px;
+      }
+
+      #add-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #0bc5ea;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        font-size: 16px;
+      }
+
+      #add-button:hover {
+        background-color: #00a3c4;
+        cursor: pointer;
+      }
+
+      .todo-item-container {
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .todo-item {
+        flex-grow: 1;
+        margin: 0;
+        font-size: 16px;
+        word-break: break-word;
+      }
+
+      .todo-buttons {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .todo-buttons button {
+        padding: 6px 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #edf2f7;
+        font-size: 14px;
+      }
+
+      .todo-buttons button:hover {
+        background-color: #2b6cb0;
+        color: white;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <div class="input-area">
@@ -11,14 +101,73 @@
       <input type="text" placeholder="todoを入力" id="input-todo" />
       <button id="add-button">追加</button>
     </div>
+
     <div class="incomplete-area">
       <h2>未完了のTODO</h2>
       <ul id="incomplete-todos"></ul>
     </div>
+
     <div class="completed-area">
       <h2>完了したTODO</h2>
       <ul id="complete-todos"></ul>
     </div>
-    <script src="./index.js" type="module"></script>
+
+    <script type="module">
+      const onClickAdd = () => {
+        const inputText = document.getElementById("input-todo").value;
+        if (inputText.trim() === "") return;
+        document.getElementById("input-todo").value = "";
+        createTodo(inputText);
+      };
+
+      const createTodo = (todo) => {
+        const li = document.createElement("li");
+
+        const container = document.createElement("div");
+        container.className = "todo-item-container";
+
+        const p = document.createElement("p");
+        p.className = "todo-item";
+        p.innerText = todo;
+
+        const buttons = document.createElement("div");
+        buttons.className = "todo-buttons";
+
+        const completeButton = document.createElement("button");
+        completeButton.innerText = "完了";
+        completeButton.addEventListener("click", () => {
+          const backButton = document.createElement("button");
+          backButton.innerText = "戻す";
+          backButton.addEventListener("click", () => {
+            const todoText =
+              backButton.parentElement.previousElementSibling.innerText;
+            createTodo(todoText);
+            li.remove();
+          });
+
+          buttons.innerHTML = "";
+          buttons.appendChild(backButton);
+          document.getElementById("complete-todos").appendChild(li);
+        });
+
+        const deleteButton = document.createElement("button");
+        deleteButton.innerText = "削除";
+        deleteButton.addEventListener("click", () => {
+          li.remove();
+        });
+
+        buttons.appendChild(completeButton);
+        buttons.appendChild(deleteButton);
+
+        container.appendChild(p);
+        container.appendChild(buttons);
+        li.appendChild(container);
+        document.getElementById("incomplete-todos").appendChild(li);
+      };
+
+      document
+        .getElementById("add-button")
+        .addEventListener("click", onClickAdd);
+    </script>
   </body>
 </html>
